@@ -48,7 +48,7 @@ router.get("/:id", async (req, res) => {
     res.json({
       sender: note.sender,
       receiver: note.receiver,
-      message: isRevealTime ? note.message : "This Sweetnote is still hidden! 🤫",
+      message: isRevealTime ? note.message : "Your Note is still hidden! 🤫",
       iv: note.iv,
       revealDate: note.revealDate,
       timeToDecrypt: isRevealTime,

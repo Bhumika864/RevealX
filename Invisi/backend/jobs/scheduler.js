@@ -15,9 +15,9 @@ setInterval(async () => {
       if (!note) continue;
 
       const payload = JSON.stringify({
-        title: "🎁✨ Sweetnotes Reveal! 🎁✨",
-        body: `*Psst! Sweetnote from ${note.sender} for ${note.receiver} is ready to be read!* `,
-        data: { url: `https://sweetnotes.art/notes/${sub.noteId}` }
+        title: "🎁✨ Note Reveal! 🎁✨",
+        body: `*Psst! Note from ${note.sender} for ${note.receiver} is ready to be read!* `,
+        data: { url: `https://Notes.art/notes/${sub.noteId}` }
       });
 
       try {
