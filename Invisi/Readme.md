@@ -1,8 +1,8 @@
-🕵️‍♂️ InvisiNote
+🕵️‍♂️ RevealX
 Send encrypted messages that reveal themselves at the perfect moment
 
 📖 About
-InvisiNote is a time-locked encrypted messaging app. Send messages that automatically unlock at a specific date and time. Perfect for birthday surprises, anniversaries, or digital time capsules.
+RevealX is a time-locked encrypted messaging app. Send messages that automatically unlock at a specific date and time. Perfect for birthday surprises, anniversaries, or digital time capsules.
 ✨ Key Features
 
 🔐 End-to-End Encryption - AES-256 client-side encryption
@@ -23,7 +23,7 @@ Backend: Node.js, Express, MongoDB, Web Push
 
 ## 📁 Project Structure
 ```
-invisinote/
+RevealX/
 ├── backend/
 │   ├── config/db.js
 │   ├── models/

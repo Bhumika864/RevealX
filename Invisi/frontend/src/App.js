@@ -21,14 +21,14 @@ function App() {
         <header className="app-header">
           <div className="logo-container">
             <div className="logo">🕵️‍♂️</div>
-            <h1>InvisiNote</h1>
+            <h1>RevealX</h1>
           </div>
 
           <nav className="main-nav">
             <ul>
               <li><NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Home</NavLink></li>
               <li><NavLink to="/create" className={({ isActive }) => isActive ? "active" : ""}>Create</NavLink></li>
-              <li><NavLink to="/notes" className={({ isActive }) => isActive ? "active" : ""}>My Notes</NavLink></li>
+              <li><NavLink to="/notes" className={({ isActive }) => isActive ? "active" : ""}>My Messages</NavLink></li>
            
             </ul>
           </nav>
@@ -54,7 +54,7 @@ function App() {
         <footer className="app-footer">
           <div className="footer-content">
             <div className="footer-section">
-              <h3>InvisiNote</h3>
+              <h3>RevealX</h3>
               <p>Secure Timed Messages — Shared Only at the Right Moment</p>
               <div className="social-icons">
                 <a href="#"><span className="social-icon">𝕏</span></a>
@@ -68,15 +68,15 @@ function App() {
               <ul>
                 <li><NavLink to="/features">Features</NavLink></li>
                 {/* <li><NavLink to="/pricing">Pricing</NavLink></li> */}
-                <li><NavLink to="/create">Create Note</NavLink></li>
-                <li><NavLink to="/notes">My Notes</NavLink></li>
+                <li><NavLink to="/create">Seal a secret</NavLink></li>
+                <li><NavLink to="/notes">My Messages</NavLink></li>
               </ul>
             </div>
 
             <div className="footer-section">
               <h4>Company</h4>
               <ul>
-                <li><NavLink to="/about">About Us</NavLink></li>
+                {/* <li><NavLink to="/about">About Us</NavLink></li> */}
              
                 <li><NavLink to="/privacy">Privacy Policy</NavLink></li>
                 <li><NavLink to="/terms">Terms of Service</NavLink></li>
@@ -94,7 +94,7 @@ function App() {
           </div>
 
           <div className="footer-bottom">
-            <p>&copy; {new Date().getFullYear()} InvisiNote. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} RevealX. All rights reserved.</p>
           </div>
         </footer>
       </div>

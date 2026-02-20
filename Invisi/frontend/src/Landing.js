@@ -11,7 +11,7 @@ function Landing() {
           <h1>Secure Timed Messages - Shared Only at the Right Moment</h1>
           <p>End-to-end encrypted messages that unlock only when you choose</p>
           <div className="hero-actions">
-            <Link to="/create" className="btn-primary">Create Your First Note</Link>
+            <Link to="/create" className="btn-primary">Create Your First Message</Link>
             <Link to="/features" className="btn-secondary">How It Works</Link>
           </div>
         </div>
@@ -27,7 +27,7 @@ function Landing() {
 
       {/* How It Works */}
       <section className="how-it-works">
-        <h2>How InvisiNote Works</h2>
+        <h2>How RevealX Works</h2>
         <div className="steps">
           <div className="step">
             <div className="step-number">1</div>
@@ -99,8 +99,8 @@ function Landing() {
       {/* CTA Section */}
       <section className="cta-section">
         <h2>Ready to Create Some Anticipation?</h2>
-        <p>Join thousands of users sending secret notes today</p>
-        <Link to="/create" className="btn-primary">Send Your First InvisiNote</Link>
+        <p>Join thousands of users sending secret messages today</p>
+        <Link to="/create" className="btn-primary">Send Your First RevealX</Link>
       </section>
     </div>
   );

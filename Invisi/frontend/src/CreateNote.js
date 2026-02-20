@@ -95,7 +95,7 @@ function CreateNote() {
   return (
     <div className="create-note-container">
       <div className="create-note-header">
-        <h2>Create Your Secret Note</h2>
+        <h2>Create Your Secret Message</h2>
         <p>Write a message that will reveal itself at the perfect moment</p>
       </div>
 
@@ -182,7 +182,7 @@ function CreateNote() {
           <div className="security-info">
             <Icon name="lock" className="security-icon" />
             <p>
-              <strong>Security Note:</strong> Your message is encrypted before it leaves your browser.
+              <strong>Security Message:</strong> Your message is encrypted before it leaves your browser.
               The decryption key will only be shown once after creation - save it!
             </p>
           </div>
@@ -198,7 +198,7 @@ function CreateNote() {
               <span className="loading-circle"></span> Securing Your Secret...
             </>
           ) : (
-            "Create Secret Note"
+            "Create Secret Message"
           )}
         </button>
       </form>

@@ -69,7 +69,7 @@ const YourNotes = () => {
   const navigate = useNavigate();
   const itemsPerPage = 5;
 
-  // Function to decrypt a note's message using CryptoJS
+  // Function to decrypt a message using CryptoJS
   const decryptNoteMessage = (encryptedMessage, encryptionKey, iv) => {
     try {
       const decrypted = CryptoJS.AES.decrypt(encryptedMessage, encryptionKey, {
@@ -77,7 +77,7 @@ const YourNotes = () => {
       }).toString(CryptoJS.enc.Utf8);
       return decrypted;
     } catch (error) {
-      console.error("Decryption error for note:", error);
+      console.error("Decryption error for message:", error);
       return null;
     }
   };
@@ -103,7 +103,7 @@ const YourNotes = () => {
               const data = await response.json();
               return { ...data, id: noteId };
             } catch (err) {
-              console.error("Error fetching note", noteId, err);
+              console.error("Error fetching message", noteId, err);
               return null;
             }
           })
@@ -112,8 +112,8 @@ const YourNotes = () => {
         const validNotes = results.filter((note) => note !== null);
         setNotes(validNotes);
       } catch (err) {
-        console.error("Error fetching notes:", err);
-        setError("Failed to load your notes.");
+        console.error("Error fetching message:", err);
+        setError("Failed to load your message.");
       } finally {
         setLoading(false);
       }
@@ -159,7 +159,7 @@ const YourNotes = () => {
   if (loading) {
     return (
       <div className="your-notes-container">
-        <h2>Your Secret Notes</h2>
+        <h2>Your Secret Message</h2>
         <div className="loading-container">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="note-skeleton">
@@ -177,7 +177,7 @@ const YourNotes = () => {
   return (
     <div className="your-notes-container">
       <div className="notes-header">
-        <h2>Your Secret Notes</h2>
+        <h2>Your Secret Message</h2>
         <p>Messages that will reveal themselves at the perfect moment</p>
       </div>
 
@@ -188,13 +188,13 @@ const YourNotes = () => {
           <div className="empty-icon">
             <Icon name="lock" className="icon-lg" />
           </div>
-          <h3>No Secret Notes Yet</h3>
-          <p>Create your first InvisiNote to surprise someone special!</p>
+          <h3>No Secret Messages Yet</h3>
+          <p>Create your first RevealX to surprise someone special!</p>
           <button
             className="create-note-btn"
             onClick={() => navigate('/create')}
           >
-            Create Your First Note
+            Create Your First Secret Message
           </button>
         </div>
       ) : (
@@ -225,13 +225,13 @@ const YourNotes = () => {
                         ? decrypted.substring(0, 100) + "..."
                         : decrypted;
                   } else {
-                    snippet = "Open to read the note";
+                    snippet = "Open to read the Message";
                   }
                 } else {
-                  snippet = "Open to read the note";
+                  snippet = "Open to read the  Message";
                 }
               } else {
-                snippet = "This Note is still hidden! 🤫";
+                snippet = "This Message is still hidden! 🤫";
               }
 
               return (

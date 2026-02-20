@@ -6,6 +6,7 @@ const noteSchema = new mongoose.Schema({
   message: String,
   iv: String,
   revealDate: Date,
+
 });
 
 module.exports = mongoose.model("Note", noteSchema);

@@ -1,9 +1,9 @@
-# Invisinotes Agent Guide
+# RevealX Agent Guide
 
 ## Commands
 - **Backend**: `cd backend && npm run dev` (development), `npm start` (production), `npm test` (no tests configured)
 - **Frontend**: `cd frontend && npm start` (dev server), `npm run build` (production), `npm test` (run tests)
-- **Start script**: `start-sweetnotes.bat` (Windows batch file to start both frontend and backend)
+- **Start script**: `RevealX.bat` (Windows batch file to start both frontend and backend)
 
 ## Architecture
 - **Stack**: MERN (MongoDB + Express + React + Node.js), end-to-end encryption with CryptoJS (AES-256-CBC)
