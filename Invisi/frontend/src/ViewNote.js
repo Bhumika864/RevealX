@@ -1,175 +1,143 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+
+
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import CryptoJS from "crypto-js";
-import html2canvas from "html2canvas";
-// import Header from "./Header";
 
 const backendUrl = process.env.REACT_APP_API_URL;
 
 function ViewNote() {
   const { id } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [note, setNote] = useState(null);
-  const [encryptionKey, setEncryptionKey] = useState(null);
+  const [noteMeta, setNoteMeta] = useState(null);
+  const [passphrase, setPassphrase] = useState("");
+  const [decryptedMessage, setDecryptedMessage] = useState("");
   const [isRevealed, setIsRevealed] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [copyButtonText, setCopyButtonText] = useState("Copy Link");
-  const [countdown, setCountdown] = useState("");
 
-  const baseURL = window.location.origin;
-
-  /* ---------------- KEY HANDLING ---------------- */
+  /* ---------- FETCH NOTE METADATA ---------- */
   useEffect(() => {
-    const keyFromUrl = searchParams.get("key");
+    const fetchNote = async () => {
+      try {
+        const res = await fetch(`${backendUrl}/api/notes/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch note");
 
-    if (keyFromUrl) {
-      setEncryptionKey(keyFromUrl);
-      localStorage.setItem(`note-key-${id}`, keyFromUrl);
-    } else {
-      const storedKey = localStorage.getItem(`note-key-${id}`);
-      if (storedKey) {
-        setEncryptionKey(storedKey);
-        setSearchParams({ key: storedKey });
-      } else {
-        setError("Missing encryption key.");
-        setIsLoading(false);
+        const data = await res.json();
+
+        /*
+          Backend should return:
+          - sender
+          - receiver
+          - cipherText
+          - iv
+          - salt
+          - revealAllowed (boolean)
+          - revealDate
+        */
+
+        setNoteMeta(data);
+      } catch (err) {
+        setError("Note not found or expired.");
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [id, searchParams, setSearchParams]);
+    };
 
-  /* ---------------- FETCH NOTE ---------------- */
-  const fetchNote = useCallback(async () => {
+    fetchNote();
+  }, [id]);
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+
     try {
-      setIsLoading(true);
-
-      const res = await fetch(`${backendUrl}/api/notes/${id}`);
-      if (!res.ok) throw new Error("Failed to fetch note");
-
-      const data = await res.json();
-      const revealDate = new Date(data.revealDate);
-
-      if (data.timeToDecrypt) {
-        const decrypted = CryptoJS.AES.decrypt(
-          data.message,
-          encryptionKey,
-          { iv: CryptoJS.enc.Hex.parse(data.iv) }
-        ).toString(CryptoJS.enc.Utf8);
-
-        setNote({
-          sender: data.sender,
-          receiver: data.receiver,
-          message: decrypted,
-          revealDate,
-        });
-        setIsRevealed(true);
-      } else {
-        setNote({
-          sender: data.sender,
-          receiver: data.receiver,
-          message: "This message is still locked 🔒",
-          revealDate,
-        });
-      }
-    } catch (err) {
-      setError("Something went wrong.");
-    } finally {
-      setIsLoading(false);
+      await navigator.clipboard.writeText(shareUrl);
+      alert("Link copied! Share the passphrase separately.");
+    } catch {
+      alert("Failed to copy link.");
     }
-  }, [id, encryptionKey]);
+  };
 
-  useEffect(() => {
-    if (encryptionKey) fetchNote();
-  }, [encryptionKey, fetchNote]);
-
-  /* ---------------- COUNTDOWN ---------------- */
-  useEffect(() => {
-    if (!note || isRevealed) return;
-
-    const timer = setInterval(() => {
-      const diff = note.revealDate.getTime() - Date.now();
-
-      if (diff <= 0) {
-        clearInterval(timer);
-        fetchNote();
+  /* ---------- DECRYPT ---------- */
+  const handleReveal = async () => {
+    try {
+      if (!noteMeta.revealAllowed) {
+        setError("This note cannot be revealed yet.");
         return;
       }
 
-      const h = Math.floor(diff / 3600000);
-      const m = Math.floor((diff / 60000) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-
-      setCountdown(
-        `${h.toString().padStart(2, "0")}:${m
-          .toString()
-          .padStart(2, "0")}:${s.toString().padStart(2, "0")}`
+      const key = CryptoJS.PBKDF2(
+        passphrase,
+        CryptoJS.enc.Hex.parse(noteMeta.salt),
+        {
+          keySize: 256 / 32,
+          iterations: 100000,
+        }
       );
-    }, 1000);
 
-    return () => clearInterval(timer);
-  }, [note, isRevealed, fetchNote]);
+      const decrypted = CryptoJS.AES.decrypt(
+        noteMeta.cipherText,
+        key,
+        { iv: CryptoJS.enc.Hex.parse(noteMeta.iv) }
+      ).toString(CryptoJS.enc.Utf8);
 
-  /* ---------------- ACTIONS ---------------- */
-  const copyToClipboard = () => {
-    const link = `${baseURL}/notes/${id}?key=${searchParams.get("key")}`;
-    navigator.clipboard.writeText(link);
-    setCopyButtonText("Copied!");
-    setTimeout(() => setCopyButtonText("Copy Link"), 2000);
+      if (!decrypted) {
+        throw new Error("Wrong passphrase");
+      }
+
+      // setDecryptedMessage(decrypted);
+      // setIsRevealed(true);
+      setDecryptedMessage(decrypted);
+      setIsRevealed(true);
+
+      await fetch(`${backendUrl}/api/notes/${id}/reveal`, {
+        method: "POST",
+      });
+    } catch (err) {
+      setError("Incorrect passphrase.");
+    }
   };
 
-  const handleSaveAsImage = () => {
-    const el = document.querySelector(".note-card");
-    if (!el) return;
+  /* ---------- UI ---------- */
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
-    html2canvas(el, { scale: 2 }).then((canvas) => {
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
-      link.download = `note-${id}.png`;
-      link.click();
-    });
-  };
-
-  /* ---------------- UI ---------------- */
   return (
     <div className="view-note-container">
-      {/* <Header /> */}
+      <div className="note-card">
+        <h2>{isRevealed ? "Secret Revealed 🔓" : "Secret Locked 🔒"}</h2>
 
-      <div className="note-content">
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>{error}</p>
+        <p><strong>From:</strong> {noteMeta.sender}</p>
+        <p><strong>To:</strong> {noteMeta.receiver}</p>
+       
+        {!isRevealed ? (
+          <>
+            <p>
+              <strong>Reveal Time:</strong>{" "}
+              {new Date(noteMeta.revealDate).toLocaleString()}
+            </p>
+
+            <input
+              type="password"
+              placeholder="Enter passphrase"
+              value={passphrase}
+              onChange={(e) => setPassphrase(e.target.value)}
+              required
+            />
+
+            <button onClick={handleReveal}>
+              Reveal Message
+            </button>
+          </>
         ) : (
-          <div className="note-card">
-            <h2>
-              {isRevealed ? "Secret Revealed 🔓" : "RevealX Locked 🔒"}
-            </h2>
-
-            <p><strong>From:</strong> {note.sender}</p>
-            <p><strong>To:</strong> {note.receiver}</p>
-
-            {!isRevealed && <h3>⏳ {countdown}</h3>}
-
-            <div className="note-message">
-              {note.message}
-            </div>
-
-            {/* ✅ ALWAYS SHOW COPY LINK */}
-            <div className="share-section">
-              <button onClick={copyToClipboard}>
-                {copyButtonText}
-              </button>
-
-              {/* ✅ SHOW SAVE AS IMAGE ONLY AFTER REVEAL */}
-              {isRevealed && (
-                <button onClick={handleSaveAsImage}>
-                  Save as Image
-                </button>
-              )}
-            </div>
+          <div className="note-message">
+            {decryptedMessage}
           </div>
-        )}
+        )} 
+        <div>
+         <button onClick={handleShare}>
+          Copy Share Link
+        </button>
+        </div>
       </div>
     </div>
   );
