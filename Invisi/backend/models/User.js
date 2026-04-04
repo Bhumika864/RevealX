@@ -38,3 +38,11 @@ userSchema.methods.comparePassword = async function (plain) {
 };
 
 module.exports = mongoose.model("User", userSchema);
+
+
+
+
+
+
+
+

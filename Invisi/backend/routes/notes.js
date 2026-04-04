@@ -10,8 +10,12 @@ const { sendShareEmail } = require("../services/emailService");
    CREATE NOTE — auth required
    ===================================================== */
 router.post("/", protect, async (req, res) => {
+  // The frontend sends an object containing everything we discussed earlier.
+// Important: Note that the Passphrase is NOT here.
   const { sender, receiver, recipientEmail, cipherText, iv, salt, revealDate } = req.body;
 
+
+  // The code checks if any critical parts (like the salt or iv) are missing. If they are, it stops immediately (res.status(400)).
   if (!sender || !receiver || !cipherText || !iv || !salt || !revealDate) {
     return res.status(400).json({ error: "Missing required fields." });
   }
@@ -22,7 +26,7 @@ router.post("/", protect, async (req, res) => {
 
   try {
     const revealAt = new Date(revealDate);
-
+// Creating the Database Record
     const note = await Note.create({
       sender,
       receiver,
@@ -244,4 +248,8 @@ router.post("/:id/reveal", protect, async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = router; 
+
+
+
+

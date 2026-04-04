@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { decryptMessage } from "./utils/webcrypto"; // ✅ Web Crypto API
@@ -192,4 +189,9 @@ function RevealNote() {
   );
 }
 
-export default RevealNote;
+export default RevealNote; 
+
+
+
+
+

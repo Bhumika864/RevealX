@@ -1,6 +1,3 @@
-
-
-
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 
@@ -81,4 +78,8 @@ const noteSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Note", noteSchema);
+module.exports = mongoose.model("Note", noteSchema); 
+
+
+
+

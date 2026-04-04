@@ -52,4 +52,4 @@ const startRevealChecker = () => {
   console.log("⏰ Reveal email checker started");
 };
 
-module.exports = { startRevealChecker };
+module.exports = { startRevealChecker };  

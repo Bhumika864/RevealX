@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import { formatISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { encryptMessage } from "./utils/webcrypto"; // ✅ Web Crypto API
+import { encryptMessage } from "./utils/webcrypto"; 
 import "react-datepicker/dist/react-datepicker.css";
 
 function CreateNote() {
@@ -168,3 +168,11 @@ function CreateNote() {
 }
 
 export default CreateNote;
+
+
+
+
+
+
+
+

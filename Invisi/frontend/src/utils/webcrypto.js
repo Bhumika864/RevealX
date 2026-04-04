@@ -31,11 +31,13 @@ const base64ToBuffer = (b64) =>
  */
 const deriveKey = async (passphrase, salt, usage) => {
   const keyMaterial = await crypto.subtle.importKey(
+   
     "raw",
-    new TextEncoder().encode(passphrase),
-    "PBKDF2",
-    false,
-    ["deriveKey"]
+
+    new TextEncoder().encode(passphrase), 
+    "PBKDF2", 
+    false, 
+    ["deriveKey"]   
   );
 
   return crypto.subtle.deriveKey(
@@ -62,18 +64,25 @@ const deriveKey = async (passphrase, salt, usage) => {
  * All values are Base64 strings safe for JSON/MongoDB storage
  */
 export const encryptMessage = async (message, passphrase) => {
+  // Generating Randomness (The "Entropy")
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const iv = crypto.getRandomValues(new Uint8Array(12)); // 96-bit IV for GCM
 
+// Deriving the Key, It takes your human passphrase and the new salt to "stretch" them into a 256-bit AES key.
   const key = await deriveKey(passphrase, salt, "encrypt");
 
   const cipherBuffer = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv },
     key,
+    // The TextEncoder() converts your text message into bytes so the algorithm can process it
     new TextEncoder().encode(message)
   );
 
   return {
+    // Computers handle encryption in "ArrayBuffers" (raw binary), but MongoDB and JSON prefer strings.
+
+// This converts the raw binary data into Base64 strings.
+// Crucial Logic: To decrypt this later, you must store the iv and the salt alongside the cipherText. These are not secret (it's okay to store them in plain text), but they are required to rebuild the key and unlock the message.
     cipherText: bufferToBase64(cipherBuffer),
     iv: bufferToBase64(iv),
     salt: bufferToBase64(salt),
@@ -104,5 +113,5 @@ export const decryptMessage = async (cipherText, iv, salt, passphrase) => {
     cipherBuffer
   );
 
-  return new TextDecoder().decode(plainBuffer);
+  return new TextDecoder().decode(plainBuffer); 
 };
