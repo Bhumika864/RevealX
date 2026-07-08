@@ -93,9 +93,9 @@ function AppInner() {
             <h3>RevealX</h3>
             <p>Secure Timed Messages — Shared Only at the Right Moment</p>
             <div className="social-icons">
-              <a href="#"><span className="social-icon">𝕏</span></a>
-              <a href="#"><span className="social-icon">f</span></a>
-              <a href="#"><span className="social-icon">in</span></a>
+              <button type="button" className="social-button"><span className="social-icon">𝕏</span></button>
+              <button type="button" className="social-button"><span className="social-icon">f</span></button>
+              <button type="button" className="social-button"><span className="social-icon">in</span></button>
             </div>
           </div>
           <div className="footer-section">
