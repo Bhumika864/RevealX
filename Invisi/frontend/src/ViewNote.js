@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { decryptMessage } from "./utils/webcrypto"; // ✅ Web Crypto API
 
-const backendUrl = process.env.REACT_APP_API_URL;
+const backendUrl = process.env.REACT_APP_API_URL || "http://localhost:5001";
 
 function ViewNote() {
   const { id } = useParams();

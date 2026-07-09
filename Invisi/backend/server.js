@@ -13,13 +13,18 @@ const { startRevealChecker } = require("./services/revealChecker");
 const app = express();
 
 // ✅ CORS — allow cookies from frontend
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL_PREVIEW,
+].filter(Boolean);
+
 const allowedOrigin = (origin, callback) => {
   // Allow any localhost port in development
   if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
     return callback(null, true);
   }
-  // In production, only allow FRONTEND_URL
-  if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
+  // In production, allow any configured frontend origin
+  if (allowedOrigins.includes(origin)) {
     return callback(null, true);
   }
   callback(new Error("Not allowed by CORS"));

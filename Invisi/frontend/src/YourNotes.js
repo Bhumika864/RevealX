@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const backendUrl = process.env.REACT_APP_API_URL;
+const backendUrl = process.env.REACT_APP_API_URL || "http://localhost:5001";
 
 const YourNotes = () => {
   const [notes, setNotes] = useState([]);
@@ -70,8 +70,8 @@ const YourNotes = () => {
               {note.status === "hidden"
                 ? "🔒 Hidden"
                 : note.status === "revealed"
-                ? "🔓 Revealed"
-                : "⌛ Expired"}
+                  ? "🔓 Revealed"
+                  : "⌛ Expired"}
             </p>
             <p>
               <strong>Reveal Date:</strong>{" "}
