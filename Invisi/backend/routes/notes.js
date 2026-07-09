@@ -11,7 +11,7 @@ const { sendShareEmail } = require("../services/emailService");
    ===================================================== */
 router.post("/", protect, async (req, res) => {
   // The frontend sends an object containing everything we discussed earlier.
-// Important: Note that the Passphrase is NOT here.
+  // Important: Note that the Passphrase is NOT here.
   const { sender, receiver, recipientEmail, cipherText, iv, salt, revealDate } = req.body;
 
 
@@ -26,7 +26,7 @@ router.post("/", protect, async (req, res) => {
 
   try {
     const revealAt = new Date(revealDate);
-// Creating the Database Record
+    // Creating the Database Record
     const note = await Note.create({
       sender,
       receiver,
@@ -42,19 +42,17 @@ router.post("/", protect, async (req, res) => {
     // 🔗 Build the public shareable link
     const shareUrl = `${process.env.FRONTEND_URL}/reveal/${note.shareToken}`;
 
-    // 📧 Send email to recipient if email was provided
+    // 📧 Send email to recipient if email was provided (non-blocking)
     if (recipientEmail) {
-      try {
-        await sendShareEmail({
-          recipientEmail,
-          receiverName: receiver,
-          senderName: sender,
-          shareUrl,
-          revealDate: revealAt,
-        });
-      } catch (emailErr) {
+      sendShareEmail({
+        recipientEmail,
+        receiverName: receiver,
+        senderName: sender,
+        shareUrl,
+        revealDate: revealAt,
+      }).catch((emailErr) => {
         console.error("⚠️ Failed to send share email:", emailErr.message);
-      }
+      });
     }
 
     res.status(201).json({
@@ -248,7 +246,7 @@ router.post("/:id/reveal", protect, async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;
 
 
 
