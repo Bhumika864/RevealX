@@ -55,7 +55,7 @@ function CreateNote() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const handleCopy = async () => {
     try {

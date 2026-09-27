@@ -41,7 +41,7 @@ const startRevealChecker = () => {
         }
       }
     } catch (err) {
-      console.error("❌ Reveal checker error:", err.message);
+      console.error(" Reveal checker error:", err.message);
     }
   };
 
