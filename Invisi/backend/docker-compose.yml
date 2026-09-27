@@ -1,17 +1,22 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  mongo:
-    image: mongo:latest
-    container_name: notes-mongo
-    restart: always
+  app:
+    build: .
     ports:
-      - "27017:27017" # Expose MongoDB on port 27017
+      - "5001:5001"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin # Default MongoDB admin username
-      MONGO_INITDB_ROOT_PASSWORD: password # Default MongoDB admin password
+      PORT: 5001
+      MONGO_URI: mongodb://mongo:27017/invisinotes
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
     volumes:
-      - mongo-data:/data/db # Persistent storage for MongoDB data
+      - mongo_data:/data/db
 
 volumes:
-  mongo-data:
+  mongo_data:
