@@ -1,0 +1,22 @@
+{
+  "name": "invisinotes-api-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.2.1",
+    "http-proxy-middleware": "^3.0.5",
+    "rate-limit-redis": "^6.0.1",
+    "redis": "^6.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "type": "commonjs"
+}
